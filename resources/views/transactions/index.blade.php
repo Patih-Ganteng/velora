@@ -20,9 +20,11 @@
 
     <!-- SIDEBAR -->
     <aside class="sidebar w-64 flex-shrink-0 flex flex-col text-white hidden md:flex">
-        <div class="h-20 flex items-center justify-center border-b border-white/10">
-            <h1 class="text-2xl font-bold tracking-widest text-white">Velora<span class="text-pink-400">.</span></h1>
+        <!-- Logo di Sidebar -->
+        <div class="h-24 flex items-center justify-center border-b border-[#C4A47C]/20 p-4">
+            <img src="{{ asset('images/logo.png') }}" alt="Velora Logo" class="h-16 object-contain brightness-0 invert">
         </div>
+
         <nav class="flex-1 py-6 px-4 space-y-2 overflow-y-auto">
             <a href="{{ route('dashboard') }}" class="nav-item flex items-center gap-4 px-4 py-3 rounded-xl text-gray-300 transition">
                 <i class="fa-solid fa-house text-lg w-6 text-center"></i>
@@ -32,7 +34,7 @@
                 <i class="fa-solid fa-envelope-open-text text-lg w-6 text-center"></i>
                 <span class="font-medium">Undangan</span>
             </a>
-            <a href="{{ route('transactions.index') }}" class="nav-active flex items-center gap-4 px-4 py-3 rounded-xl transition">
+            <a href="{{ route('transactions.index') }}" class="nav-item flex items-center gap-4 px-4 py-3 rounded-xl text-gray-300 transition">
                 <i class="fa-solid fa-receipt text-lg w-6 text-center"></i>
                 <span class="font-medium">Transaksi</span>
             </a>

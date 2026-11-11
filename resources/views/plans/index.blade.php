@@ -11,18 +11,19 @@
     
     <style>
         body { font-family: 'Inter', sans-serif; background-color: #F8F9FA; }
-        .sidebar { background-color: #2B1220; }
-        .nav-active { background-color: #751246; color: white; }
-        .nav-item:hover { background-color: rgba(255,255,255,0.1); }
+        .sidebar { background-color: #132A46; }
+        .nav-active { background-color: #C4A47C; color: #132A46; font-weight: 700; }
+        .nav-item:hover { background-color: rgba(196, 164, 124, 0.2); color: #C4A47C; }
     </style>
 </head>
 <body class="flex h-screen overflow-hidden text-gray-800">
 
     <!-- SIDEBAR -->
     <aside class="sidebar w-64 flex-shrink-0 flex flex-col text-white hidden md:flex">
-        <div class="h-20 flex items-center justify-center border-b border-white/10">
-            <h1 class="text-2xl font-bold tracking-widest text-white">Velora<span class="text-pink-400">.</span></h1>
+        <div class="h-24 flex items-center justify-center border-b border-[#C4A47C]/20 p-4">
+            <img src="{{ asset('images/logo.png') }}" alt="Velora Logo" class="h-16 object-contain brightness-0 invert">
         </div>
+
         <nav class="flex-1 py-6 px-4 space-y-2 overflow-y-auto">
             <a href="{{ route('dashboard') }}" class="nav-item flex items-center gap-4 px-4 py-3 rounded-xl text-gray-300 transition">
                 <i class="fa-solid fa-house text-lg w-6 text-center"></i>
@@ -46,8 +47,8 @@
     <!-- MAIN CONTENT -->
     <main class="flex-1 flex flex-col h-full overflow-hidden">
         <header class="h-20 bg-white border-b border-gray-200 flex items-center justify-between px-8 flex-shrink-0">
-            <h2 class="text-2xl font-bold text-[#751246]">Upgrade Paket</h2>
-            <div class="w-10 h-10 rounded-lg bg-[#751246] text-white flex items-center justify-center font-bold text-lg uppercase cursor-pointer">
+            <h2 class="text-2xl font-bold text-[#132A46]">Upgrade Paket</h2>
+            <div class="w-10 h-10 rounded-lg bg-[#132A46] text-[#C4A47C] border border-[#C4A47C]/50 flex items-center justify-center font-bold text-lg uppercase cursor-pointer">
                 {{ substr(auth()->user()->name, 0, 2) }}
             </div>
         </header>
@@ -73,15 +74,17 @@
                     
                     @php
                         $isFree = ($plan->price == 0);
-                        $isPopular = ($plan->name === 'Business'); // Cuma Business yang dapet label
-                        $cardClass = $isPopular ? 'border-[#A2005D] shadow-md transform lg:-translate-y-4' : 'border-gray-200';
-                        $buttonClass = $isFree ? 'bg-gray-500 hover:bg-gray-600' : 'bg-[#A2005D] hover:bg-[#80004A]';
+                        $isPopular = ($plan->name === 'Business');
+                        
+                        // Tema Warna: Navy & Gold
+                        $cardClass = $isPopular ? 'border-[#C4A47C] shadow-lg transform lg:-translate-y-4' : 'border-gray-200';
+                        $buttonClass = $isFree ? 'bg-gray-500 hover:bg-gray-600' : 'bg-[#132A46] hover:bg-[#0d1d30]';
                     @endphp
 
                     <div class="bg-white rounded-xl shadow-sm border-2 {{ $cardClass }} p-6 flex flex-col relative overflow-hidden h-full">
                         
                         @if($isPopular)
-                            <div class="absolute top-0 left-0 right-0 bg-[#A2005D] text-white text-center text-[10px] font-bold py-1 uppercase tracking-widest">Paling Laris</div>
+                            <div class="absolute top-0 left-0 right-0 bg-[#C4A47C] text-[#132A46] text-center text-[10px] font-bold py-1 uppercase tracking-widest">Paling Laris</div>
                         @endif
 
                         <div class="text-center mb-6 mt-2">
@@ -97,9 +100,9 @@
                             <div class="mt-4">
                                 @if(!$isFree)
                                     <span class="text-gray-400 line-through text-xs">IDR {{ number_format($plan->price * 2, 0, ',', '.') }}</span>
-                                    <span class="bg-[#A2005D] text-white text-[10px] font-bold px-2 py-0.5 rounded ml-1">50% OFF</span>
+                                    <span class="bg-[#132A46] text-[#C4A47C] text-[10px] font-bold px-2 py-0.5 rounded ml-1">50% OFF</span>
                                 @endif
-                                <div class="text-3xl font-bold text-[#A2005D] mt-2">
+                                <div class="text-3xl font-bold text-[#132A46] mt-2">
                                     @if($isFree) 
                                         GRATIS
                                     @else
@@ -112,7 +115,7 @@
                         <ul class="space-y-3 text-xs text-gray-600 flex-1 mb-6">
                             @foreach($plan->features as $feature)
                                 <li class="flex items-start gap-2">
-                                    <i class="fa-solid fa-circle-check text-green-500 mt-0.5"></i> 
+                                    <i class="fa-solid fa-circle-check text-[#C4A47C] mt-0.5"></i> 
                                     <span>{{ $feature }}</span>
                                 </li>
                             @endforeach

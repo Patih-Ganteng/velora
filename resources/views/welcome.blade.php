@@ -3,74 +3,75 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Velora - Undangan Digital</title>
+    <title>Velora - Digital Invitation</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Cinzel:wght@600;700&display=swap" rel="stylesheet">
     
     <style>
         body { font-family: 'Inter', sans-serif; }
-        .font-brand { font-family: 'Playfair Display', serif; }
+        .font-luxury { font-family: 'Cinzel', serif; }
         
-        .bg-animated {
-            background: linear-gradient(-45deg, #2B1220, #751246, #A2005D, #2B1220);
-            background-size: 400% 400%;
-            animation: gradient 15s ease infinite;
-        }
-        @keyframes gradient {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
+        /* Background Navy Gelap */
+        .bg-navy { background-color: #132A46; }
+        
+        /* Efek Kaca Mewah */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(196, 164, 124, 0.3);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
         }
 
-        .glass-card {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.5);
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        .btn-gold {
+            background: linear-gradient(135deg, #C4A47C, #D4B692);
+            color: #132A46;
+        }
+        .btn-gold:hover {
+            background: linear-gradient(135deg, #B38E62, #C4A47C);
         }
     </style>
 </head>
-<body class="bg-animated min-h-screen flex items-center justify-center p-6 relative overflow-hidden">
+<body class="bg-navy min-h-screen flex items-center justify-center p-6 relative overflow-hidden">
 
-    <div class="absolute top-[-10%] left-[-10%] w-96 h-96 bg-pink-500/20 rounded-full blur-3xl"></div>
-    <div class="absolute bottom-[-10%] right-[-10%] w-96 h-96 bg-purple-500/20 rounded-full blur-3xl"></div>
+    <!-- Ornamen Emas di Background -->
+    <div class="absolute top-[-10%] left-[-10%] w-96 h-96 bg-[#C4A47C]/10 rounded-full blur-3xl"></div>
+    <div class="absolute bottom-[-10%] right-[-10%] w-96 h-96 bg-[#C4A47C]/10 rounded-full blur-3xl"></div>
 
     <div class="glass-card w-full max-w-md rounded-3xl p-8 md:p-10 relative z-10 text-center">
         
-        <h1 class="font-brand text-4xl md:text-5xl font-bold text-[#751246] mb-2">Velora<span class="text-pink-500">.</span></h1>
-        <p class="text-gray-500 text-sm mb-8">Undangan Digital Premium</p>
+        <!-- LOGO VELORA -->
+        <img src="{{ asset('images/logo.png') }}" alt="Velora Logo" class="w-48 mx-auto mb-6">
 
         @auth
-            <div class="mb-8">
-                <div class="w-20 h-20 bg-pink-100 text-[#751246] text-2xl font-bold rounded-full flex items-center justify-center mx-auto mb-4 border-4 border-white shadow-lg uppercase">
+            <div class="mb-8 mt-4">
+                <div class="w-20 h-20 bg-[#132A46] text-[#C4A47C] text-2xl font-luxury font-bold rounded-full flex items-center justify-center mx-auto mb-4 border-2 border-[#C4A47C] shadow-lg uppercase">
                     {{ substr(auth()->user()->name, 0, 2) }}
                 </div>
-                <h2 class="text-2xl font-bold text-gray-800">Selamat Datang,</h2>
-                <h3 class="text-xl text-[#A2005D] font-semibold">{{ auth()->user()->name }}!</h3>
+                <h2 class="text-xl text-gray-500">Selamat Datang,</h2>
+                <h3 class="text-2xl text-[#132A46] font-semibold">{{ auth()->user()->name }}!</h3>
             </div>
             
-            <a href="{{ route('dashboard') }}" class="flex items-center justify-center w-full py-3.5 bg-[#751246] hover:bg-[#5a0d35] text-white font-semibold rounded-xl transition-all shadow-lg shadow-[#751246]/30 transform hover:-translate-y-1">
+            <a href="{{ route('dashboard') }}" class="flex items-center justify-center w-full py-3.5 btn-gold font-semibold rounded-xl transition-all shadow-lg transform hover:-translate-y-1">
                 Masuk ke Dashboard
                 <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path></svg>
             </a>
 
-            <!-- TOMBOL LOGOUT UNTUK TESTING -->
-            <form action="{{ route('logout') }}" method="POST" class="mt-4">
+            <form action="{{ route('logout') }}" method="POST" class="mt-5">
                 @csrf
-                <button type="submit" class="text-sm text-red-500 hover:text-red-700 hover:underline transition">
+                <button type="submit" class="text-sm text-gray-400 hover:text-red-500 transition">
                     Keluar / Ganti Akun
                 </button>
             </form>
 
         @else
-            <div class="mb-8">
-                <h2 class="text-2xl font-bold text-gray-800 mb-2">Selamat Datang!</h2>
+            <div class="mb-8 mt-4">
+                <h2 class="text-2xl font-luxury text-[#132A46] mb-2">Welcome</h2>
                 <p class="text-gray-500 text-sm">Silakan masuk untuk mulai membuat undangan digital impianmu.</p>
             </div>
 
-            <a href="{{ route('google.redirect') }}" class="flex items-center justify-center gap-3 w-full py-3.5 bg-white border-2 border-gray-200 hover:border-gray-300 hover:bg-gray-50 text-gray-700 font-semibold rounded-xl transition-all shadow-sm transform hover:-translate-y-1">
-                <svg class="w-6 h-6" viewBox="0 0 24 24">
+            <a href="{{ route('google.redirect') }}" class="flex items-center justify-center gap-3 w-full py-3.5 bg-[#132A46] hover:bg-[#0d1d30] text-white font-semibold rounded-xl transition-all shadow-lg transform hover:-translate-y-1 border border-[#C4A47C]/50">
+                <svg class="w-6 h-6 bg-white rounded-full p-1" viewBox="0 0 24 24">
                     <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
                     <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
                     <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
@@ -83,7 +84,6 @@
         <p class="mt-10 text-xs text-gray-400">
             &copy; {{ date('Y') }} Velora. All rights reserved.
         </p>
-
     </div>
 </body>
 </html>
