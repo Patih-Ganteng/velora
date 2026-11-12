@@ -68,16 +68,6 @@
         <div class="flex-1 overflow-y-auto p-8">
             <div class="max-w-5xl mx-auto space-y-6">
                 
-                <!-- Alert Email Belum Diverifikasi -->
-                <div class="bg-[#FFF8E1] border border-[#FFE082] rounded-xl p-5 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-                    <div>
-                        <h3 class="font-bold text-[#8D6E63]">Email belum diverifikasi</h3>
-                        <p class="text-sm text-[#8D6E63]/80 mt-1">Silakan verifikasi email ({{ auth()->user()->email }}) agar akun Anda tetap aman.</p>
-                    </div>
-                    <button class="bg-[#FFC107] text-[#8D6E63] font-bold px-4 py-2 rounded-lg text-sm whitespace-nowrap hover:bg-yellow-500 transition">
-                        Kirim Ulang Verifikasi
-                    </button>
-                </div>
 
                 <!-- Alert Upgrade Akun -->
                 <div class="bg-gray-100 border border-gray-300 rounded-xl p-5 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
@@ -101,7 +91,7 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div class="bg-[#F8F9FA] rounded-lg p-5 border border-[#C4A47C]/30">
                             <p class="text-sm font-semibold text-gray-500">Kuota Undangan</p>
-                            <h3 class="text-3xl font-bold text-[#132A46] mt-2">{{ auth()->user()->plan_id == 1 ? '1' : '∞' }}</h3>
+                            <h3 class="text-3xl font-bold text-[#132A46] mt-2">{{ auth()->user()->plan_id == 1 ? '3' : '∞' }}</h3>
                         </div>
                         <div class="bg-[#F8F9FA] rounded-lg p-5 border border-[#C4A47C]/30">
                             <p class="text-sm font-semibold text-gray-500">Total Undangan Dibuat</p>

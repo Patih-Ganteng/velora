@@ -22,7 +22,7 @@ class InvitationController extends Controller
         $user = Auth::user();
         
         // Cek batas kuota paket gratis (Maksimal 1 undangan)
-        if (($user->plan_id == 1 || $user->plan_id == null) && $user->invitations()->count() >= 1) {
+        if (($user->plan_id == 1 || $user->plan_id == null) && $user->invitations()->count() >= 3) {
             return redirect()->route('plans.index')->with('error', 'Kuota undangan paket Gratis kamu sudah habis. Silakan upgrade paket!');
         }
 
@@ -55,7 +55,7 @@ class InvitationController extends Controller
         $user = Auth::user();
 
         // 1. Cek Kuota
-        if (($user->plan_id == 1 || $user->plan_id == null) && $user->invitations()->count() >= 1) {
+        if (($user->plan_id == 1 || $user->plan_id == null) && $user->invitations()->count() >= 3) {
             return redirect()->route('plans.index')->with('error', 'Kuota undangan paket Gratis kamu sudah habis.');
         }
 
