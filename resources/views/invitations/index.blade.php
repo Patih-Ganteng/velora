@@ -89,22 +89,46 @@
                 <div id="invitationList" class="space-y-4">
                     @forelse($invitations as $inv)
                     <div class="invitation-card bg-white rounded-xl shadow-sm border border-gray-100 p-5 flex flex-col md:flex-row items-center justify-between gap-4 transition hover:shadow-md">
-                        <div class="flex items-center gap-5 w-full md:w-auto">
-                            <div class="w-16 h-16 bg-[#132A46]/10 rounded-xl flex items-center justify-center flex-shrink-0 text-[#C4A47C] text-2xl">
+                        
+                        <!-- Kiri: Icon, Judul, Tanggal, Statistik -->
+                        <div class="flex items-start gap-5 w-full md:w-auto">
+                            <div class="w-16 h-16 bg-[#132A46]/10 rounded-xl flex items-center justify-center flex-shrink-0 text-[#C4A47C] text-2xl mt-1">
                                 <i class="fa-solid fa-heart"></i>
                             </div>
                             <div>
                                 <h3 class="font-bold text-lg text-[#132A46] search-title">{{ $inv->title }}</h3>
-                                <p class="text-sm text-gray-500">{{ \Carbon\Carbon::parse($inv->event_date)->translatedFormat('d F Y') }}</p>
+                                <p class="text-sm text-gray-500 mb-3">{{ \Carbon\Carbon::parse($inv->event_date)->translatedFormat('d F Y') }}</p>
+                                
+                                <!-- STATISTIK BARU -->
+                                <div class="flex flex-wrap gap-2 text-[11px] font-semibold">
+                                    <span class="bg-blue-50 text-blue-600 px-2.5 py-1 rounded-md border border-blue-100">
+                                        <i class="fa-solid fa-eye me-1"></i> {{ $inv->views }} Dilihat
+                                    </span>
+                                    <span class="bg-green-50 text-green-600 px-2.5 py-1 rounded-md border border-green-100">
+                                        <i class="fa-solid fa-check me-1"></i> {{ $inv->hadir_count }} Hadir
+                                    </span>
+                                    <span class="bg-red-50 text-red-600 px-2.5 py-1 rounded-md border border-red-100">
+                                        <i class="fa-solid fa-xmark me-1"></i> {{ $inv->tidak_hadir_count }} Tidak Hadir
+                                    </span>
+                                </div>
                             </div>
                         </div>
 
-                        <div class="flex gap-2 w-full md:w-auto justify-end">
-                            <a href="{{ route('invitations.show', $inv->id) }}" target="_blank" class="bg-[#132A46] text-white px-5 py-2 rounded-lg text-sm font-semibold hover:bg-[#0d1d30] transition flex items-center gap-2">
-                                <i class="fa-solid fa-globe"></i> Lihat Web
+                        <!-- Kanan: Tombol Aksi -->
+                        <div class="flex flex-wrap gap-2 w-full md:w-auto justify-end mt-4 md:mt-0">
+                            <!-- Tombol Tamu -->
+                            <a href="{{ route('invitations.guests', $inv->id) }}" class="bg-gray-100 text-gray-700 px-4 py-2 rounded-lg text-sm font-semibold hover:bg-gray-200 transition flex items-center gap-2">
+                                <i class="fa-solid fa-users"></i> Tamu
                             </a>
-                            <a href="{{ route('invitations.edit', $inv->id) }}" class="bg-[#C4A47C] text-[#132A46] px-5 py-2 rounded-lg text-sm font-semibold hover:bg-[#B38E62] transition flex items-center gap-2">
-                                <i class="fa-solid fa-sliders"></i> Kelola
+                            
+                            <!-- Tombol Bagikan -->
+                            <button onclick="copyLink('{{ route('invitations.show', $inv->id) }}', this)" class="bg-[#C4A47C] text-[#132A46] px-4 py-2 rounded-lg text-sm font-semibold hover:bg-[#B38E62] transition flex items-center gap-2">
+                                <i class="fa-solid fa-share-nodes"></i> Bagikan
+                            </button>
+                            
+                            <!-- Tombol Lihat -->
+                            <a href="{{ route('invitations.show', $inv->id) }}" target="_blank" class="bg-[#132A46] text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-[#0d1d30] transition flex items-center gap-2">
+                                <i class="fa-solid fa-globe"></i> Lihat
                             </a>
                         </div>
                     </div>
@@ -129,8 +153,9 @@
         </div>
     </main>
 
-    <!-- SCRIPT SEARCH -->
+    <!-- SCRIPT SEARCH & COPY LINK -->
     <script>
+        // Fitur Pencarian
         document.getElementById('searchInput').addEventListener('keyup', function() {
             let filter = this.value.toLowerCase();
             let cards = document.querySelectorAll('.invitation-card');
@@ -144,6 +169,27 @@
                 }
             });
         });
+
+        // Fitur Bagikan (Copy Link)
+        function copyLink(text, btn) {
+            navigator.clipboard.writeText(text).then(() => {
+                const originalText = btn.innerHTML;
+                btn.innerHTML = '<i class="fa-solid fa-check"></i> Tersalin!';
+                
+                // Ubah warna jadi hijau sementara
+                btn.classList.replace('bg-[#C4A47C]', 'bg-green-500');
+                btn.classList.replace('text-[#132A46]', 'text-white');
+                
+                setTimeout(() => {
+                    // Balikin ke warna asli
+                    btn.innerHTML = originalText;
+                    btn.classList.replace('bg-green-500', 'bg-[#C4A47C]');
+                    btn.classList.replace('text-white', 'text-[#132A46]');
+                }, 2000);
+            }).catch(err => {
+                alert('Gagal menyalin link. Pastikan browser mendukung fitur clipboard.');
+            });
+        }
     </script>
 </body>
 </html>

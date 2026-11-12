@@ -9,10 +9,20 @@ use Illuminate\Support\Str;
 
 class InvitationController extends Controller
 {
-    // 1. Tampilkan daftar semua undangan (Halaman Undangan)
+    // 1. Tampilkan daftar semua undangan (DENGAN STATISTIK)
     public function index()
     {
-        $invitations = Auth::user()->invitations()->latest()->get();
+        // Tarik data undangan beserta jumlah tamu hadir, tidak hadir, dan total tamu
+        $invitations = Auth::user()->invitations()->withCount([
+            'guests',
+            'guests as hadir_count' => function ($query) {
+                $query->where('rsvp_status', 'hadir');
+            },
+            'guests as tidak_hadir_count' => function ($query) {
+                $query->where('rsvp_status', 'tidak_hadir');
+            }
+        ])->latest()->get();
+
         return view('invitations.index', compact('invitations'));
     }
 
@@ -21,7 +31,7 @@ class InvitationController extends Controller
     {
         $user = Auth::user();
         
-        // Cek batas kuota paket gratis (Maksimal 1 undangan)
+        // Cek batas kuota paket gratis (Maksimal 3 undangan)
         if (($user->plan_id == 1 || $user->plan_id == null) && $user->invitations()->count() >= 3) {
             return redirect()->route('plans.index')->with('error', 'Kuota undangan paket Gratis kamu sudah habis. Silakan upgrade paket!');
         }
@@ -30,17 +40,14 @@ class InvitationController extends Controller
 
         // Filter Tema untuk User Gratis
         if ($user->plan_id == 1 || $user->plan_id == null) {
-            // Tema yang diizinkan untuk gratisan
             $allowedThemes = ['mewah', 'kpop', 'anak-anak', 'formal'];
             
             foreach ($categories as $catKey => &$cat) {
                 if ($catKey == 'nikah' || $catKey == 'ultah') {
-                    // Saring sub-tema
                     $cat['themes'] = array_values(array_filter($cat['themes'], function($theme) use ($allowedThemes) {
                         return in_array($theme, $allowedThemes);
                     }));
                 } else {
-                    // Kategori Umum tidak boleh sama sekali buat yang gratis
                     unset($categories[$catKey]);
                 }
             }
@@ -87,11 +94,16 @@ class InvitationController extends Controller
         return redirect()->route('dashboard')->with('success', 'Undangan berhasil dibuat!');
     }
 
-    // 4. Tampilkan halaman undangan
+    // 4. Tampilkan halaman undangan (HITUNG VIEWS)
     public function show(Request $request, Invitation $invitation)
     {
         if ($invitation->user_id !== Auth::id() && !$request->has('to')) {
             abort(403, 'Akses ditolak.');
+        }
+
+        // TAMBAHAN: Tambah jumlah views kalau dibuka lewat link tamu (?to=...)
+        if ($request->has('to')) {
+            $invitation->increment('views');
         }
 
         $guest = null;
@@ -194,7 +206,7 @@ class InvitationController extends Controller
             'opening_greeting', 'quran_verse', 'love_story',
             'event_1_name', 'event_1_time', 'event_2_name', 'event_2_time',
             'dress_code', 'maps_link', 'maps_address',
-            'full_name', 'nickname', 'age', // Untuk Ulang Tahun
+            'full_name', 'nickname', 'age',
         ];
 
         foreach ($textFields as $field) {
