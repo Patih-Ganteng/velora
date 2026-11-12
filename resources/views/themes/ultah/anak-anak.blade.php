@@ -225,42 +225,51 @@
             </section>
             @endif
 
-            <!-- RSVP SECTION (BARU DITAMBAHKAN) -->
-            <section class="bg-white p-6 rounded-3xl shadow-xl border-4 border-partyPink text-center">
-                <h3 class="font-party text-2xl text-partyDark mb-4">Konfirmasi Kehadiran 🎈</h3>
-                
-                @if(session('rsvp_success'))
-                    <div class="bg-green-100 text-green-800 p-3 rounded-xl mb-4 text-sm font-bold border border-green-200">{{ session('rsvp_success') }}</div>
-                @endif
-
-                @if($guest)
-                    <p class="text-sm text-gray-600 mb-5">Halo <b>{{ $guest->name }}</b>, silakan konfirmasi kehadiran Anda:</p>
-                    <form action="{{ route('guests.rsvp', $invitation->id) }}" method="POST" class="flex flex-col sm:flex-row justify-center gap-3">
-                        @csrf
-                        <input type="hidden" name="guest_code" value="{{ $guest->unique_code }}">
-                        <button type="submit" name="status" value="hadir" class="px-8 py-3 bg-partyPink text-white font-party font-bold rounded-xl shadow-[0_4px_0_#d94f78] hover:translate-y-1 hover:shadow-[0_1px_0_#d94f78] transition-all w-full sm:w-auto text-sm">Hadir</button>
-                        <button type="submit" name="status" value="tidak_hadir" class="px-8 py-3 bg-gray-300 text-gray-700 font-party font-bold rounded-xl shadow-[0_4px_0_#a0a0a0] hover:translate-y-1 hover:shadow-[0_1px_0_#a0a0a0] transition-all w-full sm:w-auto text-sm">Tidak Hadir</button>
-                    </form>
-                @else
-                    <p class="text-sm text-gray-500 italic">Silakan buka link undangan dari penyelenggara untuk konfirmasi.</p>
-                @endif
-            </section>
-
-            <!-- RSVP & UCAPAN -->
-            <section class="bg-white p-6 rounded-3xl shadow-xl border-4 border-partyPurple">
-                <h3 class="font-party text-2xl text-partyDark text-center mb-6">Buku Tamu & Ucapan 🎁</h3>
+            <!-- FORM GABUNGAN: KONFIRMASI & UCAPAN -->
+            <section class="bg-white p-6 rounded-3xl shadow-xl border-4 border-partyPink">
+                <h3 class="font-party text-2xl text-partyDark text-center mb-6">Konfirmasi & Ucapan 🎁</h3>
                 
                 @if(session('message_success'))
-                    <div class="bg-green-100 text-green-800 p-3 rounded-xl mb-4 text-center text-xs font-bold">{{ session('message_success') }}</div>
+                    <div class="bg-green-100 text-green-800 p-3 rounded-xl mb-4 text-center text-xs font-bold border border-green-200">{{ session('message_success') }}</div>
+                @endif
+                @if(session('rsvp_success'))
+                    <div class="bg-green-100 text-green-800 p-3 rounded-xl mb-4 text-center text-xs font-bold border border-green-200">{{ session('rsvp_success') }}</div>
                 @endif
 
-                <form action="{{ route('messages.store', $invitation->id) }}" method="POST" class="space-y-3 mb-8">
+                <form action="{{ route('messages.store', $invitation->id) }}" method="POST" class="space-y-4 mb-8">
                     @csrf
-                    <input type="text" name="name" class="w-full bg-gray-50 border-2 border-gray-200 p-3 rounded-xl focus:border-partyPink focus:outline-none text-sm" placeholder="Nama Anda" required>
-                    <textarea name="message" rows="3" class="w-full bg-gray-50 border-2 border-gray-200 p-3 rounded-xl focus:border-partyPink focus:outline-none text-sm" placeholder="Tuliskan doa & ucapan selamat..." required></textarea>
-                    <button type="submit" class="w-full bg-partyPink text-white font-party font-bold py-3 rounded-xl shadow-[0_4px_0_#d94f78] hover:translate-y-1 hover:shadow-[0_1px_0_#d94f78] transition-all">Kirim Ucapan</button>
+                    
+                    <!-- Nama -->
+                    <div>
+                        <label class="text-xs font-bold text-partyDark mb-1 block">Nama Anda</label>
+                        <input type="text" name="name" value="{{ $guest->name ?? '' }}" class="w-full bg-gray-50 border-2 border-gray-200 p-3 rounded-xl focus:border-partyPink focus:outline-none text-sm" placeholder="Tulis nama kamu..." {{ $guest ? 'readonly' : 'required' }}>
+                    </div>
+
+                    <!-- Kehadiran -->
+                    <div>
+                        <label class="text-xs font-bold text-partyDark mb-1 block">Konfirmasi Kehadiran</label>
+                        <div class="flex gap-2">
+                            <label class="flex-1 cursor-pointer">
+                                <input type="radio" name="rsvp_status" value="hadir" class="peer hidden" required>
+                                <div class="w-full text-center py-2.5 rounded-xl border-2 border-gray-200 text-gray-500 font-bold text-sm peer-checked:bg-partyPink peer-checked:text-white peer-checked:border-partyPink transition">Hadir</div>
+                            </label>
+                            <label class="flex-1 cursor-pointer">
+                                <input type="radio" name="rsvp_status" value="tidak_hadir" class="peer hidden">
+                                <div class="w-full text-center py-2.5 rounded-xl border-2 border-gray-200 text-gray-500 font-bold text-sm peer-checked:bg-gray-400 peer-checked:text-white peer-checked:border-gray-400 transition">Tidak Hadir</div>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Ucapan -->
+                    <div>
+                        <label class="text-xs font-bold text-partyDark mb-1 block">Ucapan & Doa</label>
+                        <textarea name="message" rows="3" class="w-full bg-gray-50 border-2 border-gray-200 p-3 rounded-xl focus:border-partyPink focus:outline-none text-sm" placeholder="Tuliskan doa & ucapan selamat..." required></textarea>
+                    </div>
+
+                    <button type="submit" class="w-full bg-partyPink text-white font-party font-bold py-3 rounded-xl shadow-[0_4px_0_#d94f78] hover:translate-y-1 hover:shadow-[0_1px_0_#d94f78] transition-all">Kirim Sekarang</button>
                 </form>
 
+                <!-- Daftar Ucapan -->
                 <div class="space-y-3 max-h-60 overflow-y-auto pr-2">
                     @forelse($messages as $msg)
                         <div class="bg-gray-50 p-3 rounded-xl border border-gray-100">

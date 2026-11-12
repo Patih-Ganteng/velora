@@ -69,7 +69,6 @@
         </div>
         <p class="section-label mb-3">THE WEDDING OF</p>
         
-        <!-- JUDUL DIBUAT RESPONSIF -->
         <h1 class="font-display text-3xl md:text-5xl lg:text-6xl gradient-text mb-7 leading-tight break-words w-full px-2">{{ $invitation->title }}</h1>
 
         <div class="flex justify-center items-center gap-5 mb-8">
@@ -122,7 +121,6 @@
             </div>
             <p class="font-display italic text-2xl text-darkpink mb-3">A love story begins...</p>
             
-            <!-- JUDUL DI HERO JUGA DIBUAT RESPONSIF -->
             <h1 class="font-display text-3xl md:text-5xl lg:text-6xl gradient-text leading-tight mb-6 break-words">{{ $invitation->title }}</h1>
 
             <div class="flex justify-center items-center gap-4 mb-6">
@@ -258,65 +256,67 @@
     </section>
     @endif
 
-    
-        <!-- RSVP SECTION (BARU DITAMBAHKAN) -->
-    <section class="max-w-lg mx-auto px-5 pt-10 pb-4 relative z-30">
-        <div class="glass soft-shadow rounded-3xl p-7 text-center border border-pink/30">
-            <p class="section-label">ATTENDANCE CONFIRMATION</p>
-            <h2 class="font-display text-3xl gradient-text mt-3 mb-6">Konfirmasi Kehadiran</h2>
-            
+    <!-- FORM GABUNGAN: RSVP & UCAPAN (BUAT SHARE WA) -->
+    <section class="max-w-lg mx-auto px-5 py-16 relative z-30">
+        <div class="glass soft-shadow rounded-3xl p-7 border border-pink/30">
+            <div class="text-center mb-8">
+                <p class="section-label">RSVP & MESSAGE</p>
+                <h2 class="font-display text-4xl gradient-text mt-3">Konfirmasi & Ucapan</h2>
+                <div class="divider"></div>
+            </div>
+
+            @if(session('message_success'))
+                <div class="bg-green-100 text-green-800 p-3 rounded-xl mb-6 text-center text-sm font-bold">{{ session('message_success') }}</div>
+            @endif
             @if(session('rsvp_success'))
-                <div class="bg-green-100 text-green-800 p-3 rounded-xl mb-4 text-center text-sm">{{ session('rsvp_success') }}</div>
+                <div class="bg-green-100 text-green-800 p-3 rounded-xl mb-6 text-center text-sm font-bold">{{ session('rsvp_success') }}</div>
             @endif
 
-            @if($guest)
-                <p class="text-sm text-gray-600 mb-5">Halo <b>{{ $guest->name }}</b>, silakan konfirmasi kehadiran Anda:</p>
-                <form action="{{ route('guests.rsvp', $invitation->id) }}" method="POST" class="flex justify-center gap-3">
-                    @csrf
-                    <input type="hidden" name="guest_code" value="{{ $guest->unique_code }}">
-                    <button type="submit" name="status" value="hadir" class="bg-[#EBA1C1] text-white px-6 py-2.5 rounded-full font-bold text-sm shadow-[0_4px_0_#d94f78] hover:translate-y-1 hover:shadow-[0_1px_0_#d94f78] transition-all">Hadir</button>
-                    <button type="submit" name="status" value="tidak_hadir" class="bg-gray-300 text-gray-700 px-6 py-2.5 rounded-full font-bold text-sm shadow-[0_4px_0_#a0a0a0] hover:translate-y-1 hover:shadow-[0_1px_0_#a0a0a0] transition-all">Tidak Hadir</button>
-                </form>
-            @else
-                <p class="text-sm text-gray-500">Silakan buka link undangan yang dikirim oleh penyelenggara untuk melakukan konfirmasi.</p>
-            @endif
-        </div>
-    </section>
-    <section class="max-w-lg mx-auto px-5 py-16">
-        <div class="text-center mb-8">
-            <p class="section-label">SEND YOUR LOVE</p>
-            <h2 class="font-display text-4xl gradient-text mt-3">Fan Letter ♡</h2>
-            <p class="text-xs text-gray-400 mt-3">Leave a sweet message for the happy couple.</p>
-            <div class="divider"></div>
-        </div>
-        <div class="glass soft-shadow rounded-3xl p-7">
-            @if(session('message_success'))
-                <div class="bg-green-100 text-green-800 p-3 rounded-xl mb-4 text-center text-sm">{{ session('message_success') }}</div>
-            @endif
             <form action="{{ route('messages.store', $invitation->id) }}" method="POST" class="space-y-5">
                 @csrf
+                
                 <div>
-                    <label class="text-xs font-bold text-darkpink mb-2 block">YOUR NAME</label>
-                    <input type="text" name="name" class="w-full bg-white border border-pink/30 p-4 rounded-xl text-sm text-ink" placeholder="Write your name..." required>
+                    <label class="text-xs font-bold text-darkpink mb-2 block uppercase tracking-wider">Nama Anda</label>
+                    <input type="text" name="name" value="{{ $guest->name ?? '' }}" class="w-full bg-white border border-pink/30 p-4 rounded-xl text-sm text-ink focus:border-darkpink focus:outline-none" placeholder="Tulis nama kamu..." {{ $guest ? 'readonly' : 'required' }}>
                 </div>
+
                 <div>
-                    <label class="text-xs font-bold text-darkpink mb-2 block">YOUR MESSAGE</label>
-                    <textarea name="message" rows="4" class="w-full bg-white border border-pink/30 p-4 rounded-xl text-sm text-ink resize-none" placeholder="Write your wishes & prayers... ♡" required></textarea>
+                    <label class="text-xs font-bold text-darkpink mb-2 block uppercase tracking-wider">Konfirmasi Kehadiran</label>
+                    <div class="flex gap-3">
+                        <label class="flex-1 cursor-pointer">
+                            <input type="radio" name="rsvp_status" value="hadir" class="peer hidden" required>
+                            <div class="w-full text-center py-3 rounded-xl border-2 border-pink/30 text-gray-500 font-bold text-sm peer-checked:bg-[#EBA1C1] peer-checked:text-white peer-checked:border-transparent transition">Hadir</div>
+                        </label>
+                        <label class="flex-1 cursor-pointer">
+                            <input type="radio" name="rsvp_status" value="tidak_hadir" class="peer hidden">
+                            <div class="w-full text-center py-3 rounded-xl border-2 border-pink/30 text-gray-500 font-bold text-sm peer-checked:bg-gray-400 peer-checked:text-white peer-checked:border-transparent transition">Tidak Hadir</div>
+                        </label>
+                    </div>
                 </div>
-                <button type="submit" class="kpop-button w-full py-4 rounded-xl font-bold text-sm tracking-widest">SEND LOVE ♡</button>
+
+                <div>
+                    <label class="text-xs font-bold text-darkpink mb-2 block uppercase tracking-wider">Ucapan & Doa</label>
+                    <textarea name="message" rows="4" class="w-full bg-white border border-pink/30 p-4 rounded-xl text-sm text-ink resize-none focus:border-darkpink focus:outline-none" placeholder="Tulis ucapan atau doa terbaikmu..." required></textarea>
+                </div>
+
+                <button type="submit" class="kpop-button w-full py-4 rounded-xl font-bold text-sm tracking-widest shadow-lg">KIRIM SEKARANG ♡</button>
             </form>
-            
-            <div class="mt-8 space-y-3 max-h-60 overflow-y-auto pr-2">
+        </div>
+
+        <!-- Daftar Ucapan -->
+        <div class="mt-10">
+            <h3 class="font-display text-2xl text-center text-darkpink mb-6">Buku Tamu</h3>
+            <div class="space-y-3 max-h-80 overflow-y-auto pr-2">
                 @forelse($messages as $msg)
-                    <div class="bg-white p-3 rounded-xl border border-pink/20 shadow-sm">
-                        <div class="flex justify-between items-center mb-1">
+                    <div class="bg-white p-4 rounded-xl border border-pink/20 shadow-sm">
+                        <div class="flex justify-between items-center mb-2">
                             <h4 class="font-bold text-darkpink text-sm">{{ $msg->name }}</h4>
                             <span class="text-[10px] text-gray-400">{{ $msg->created_at->diffForHumans() }}</span>
                         </div>
-                        <p class="text-gray-600 text-sm">{{ $msg->message }}</p>
+                        <p class="text-gray-600 text-sm leading-relaxed">{{ $msg->message }}</p>
                     </div>
                 @empty
-                    <p class="text-center text-gray-400 text-sm italic">Belum ada ucapan.</p>
+                    <p class="text-center text-gray-400 text-sm italic">Belum ada ucapan. Jadilah yang pertama!</p>
                 @endforelse
             </div>
         </div>
@@ -358,7 +358,6 @@
             main.classList.remove('hidden');
             main.classList.add('fade-in');
             
-            // Play music and show button
             musicBtn.classList.remove('hidden');
             music.play().then(() => {
                 pauseIcon.classList.remove('hidden');
@@ -392,6 +391,13 @@
     }
     updateCountdown();
     setInterval(updateCountdown, 1000);
+
+    // Auto-check RSVP if guest already confirmed
+    @if($guest && $guest->rsvp_status === 'hadir')
+        document.querySelector('input[name="rsvp_status"][value="hadir"]').checked = true;
+    @elseif($guest && $guest->rsvp_status === 'tidak_hadir')
+        document.querySelector('input[name="rsvp_status"][value="tidak_hadir"]').checked = true;
+    @endif
 </script>
 </body>
 </html>

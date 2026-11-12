@@ -250,42 +250,57 @@
                 </section>
                 @endif
 
-                <!-- 3. RSVP Section (ELEGAN) -->
-                <section id="rsvp" class="bg-dark p-6 md:p-8 rounded-2xl shadow-[0_0_20px_rgba(212,175,55,0.2)] border border-gold/50 text-center">
-                    <h2 class="text-2xl font-serif text-gold mb-2">Konfirmasi Kehadiran</h2>
-                    <div class="w-10 h-[1px] bg-gold/50 mx-auto mb-6"></div>
+                <!-- 3. FORM GABUNGAN: RSVP & UCAPAN -->
+                <section id="rsvp" class="bg-dark p-6 md:p-8 rounded-2xl shadow-[0_0_20px_rgba(212,175,55,0.2)] border border-gold/50">
+                    <div class="text-center mb-8">
+                        <h2 class="text-2xl font-serif text-gold mb-2">Konfirmasi & Ucapan</h2>
+                        <div class="w-10 h-[1px] bg-gold/50 mx-auto"></div>
+                    </div>
                     
+                    @if(session('message_success'))
+                        <div class="bg-green-900/50 text-green-300 border border-green-700 p-3 rounded-lg mb-6 text-center text-sm">{{ session('message_success') }}</div>
+                    @endif
                     @if(session('rsvp_success'))
-                        <div class="bg-gold/20 text-gold border border-gold p-3 rounded-lg mb-4 text-sm">{{ session('rsvp_success') }}</div>
+                        <div class="bg-green-900/50 text-green-300 border border-green-700 p-3 rounded-lg mb-6 text-center text-sm">{{ session('rsvp_success') }}</div>
                     @endif
 
-                    @if($guest)
-                        <p class="text-gray-300 text-sm mb-6">Halo <b>{{ $guest->name }}</b>, berkenan hadir?</p>
-                        <form action="{{ route('guests.rsvp', $invitation->id) }}" method="POST" class="flex flex-col md:flex-row justify-center gap-3">
-                            @csrf
-                            <input type="hidden" name="guest_code" value="{{ $guest->unique_code }}">
-                            <button type="submit" name="status" value="hadir" class="px-8 py-3 bg-gold text-dark rounded-full hover:bg-yellow-600 transition w-full md:w-auto font-bold text-sm tracking-wider uppercase shadow-lg">Hadir</button>
-                            <button type="submit" name="status" value="tidak_hadir" class="px-8 py-3 bg-gray-800 text-gray-300 border border-gray-600 rounded-full hover:bg-gray-700 transition w-full md:w-auto font-bold text-sm tracking-wider uppercase shadow-lg">Tidak Hadir</button>
-                        </form>
-                    @else
-                        <p class="text-center text-gray-400 text-sm italic">Silakan buka link undangan khusus dari penyelenggara untuk konfirmasi.</p>
-                    @endif
+                    <form action="{{ route('messages.store', $invitation->id) }}" method="POST" class="space-y-5">
+                        @csrf
+                        
+                        <!-- Nama -->
+                        <div>
+                            <label class="text-xs font-bold text-gold mb-2 block uppercase tracking-wider">Nama Anda</label>
+                            <input type="text" name="name" value="{{ $guest->name ?? '' }}" class="w-full bg-black/50 border border-gold/30 p-3 rounded-lg text-white text-sm focus:border-gold focus:outline-none transition" placeholder="Tulis nama kamu..." {{ $guest ? 'readonly' : 'required' }}>
+                        </div>
+
+                        <!-- Pilihan Kehadiran -->
+                        <div>
+                            <label class="text-xs font-bold text-gold mb-2 block uppercase tracking-wider">Konfirmasi Kehadiran</label>
+                            <div class="flex gap-3">
+                                <label class="flex-1 cursor-pointer">
+                                    <input type="radio" name="rsvp_status" value="hadir" class="peer hidden" required>
+                                    <div class="w-full text-center py-3 rounded-lg border border-gray-600 text-gray-400 font-bold text-sm peer-checked:bg-gold peer-checked:text-dark peer-checked:border-gold transition">Hadir</div>
+                                </label>
+                                <label class="flex-1 cursor-pointer">
+                                    <input type="radio" name="rsvp_status" value="tidak_hadir" class="peer hidden">
+                                    <div class="w-full text-center py-3 rounded-lg border border-gray-600 text-gray-400 font-bold text-sm peer-checked:bg-gray-700 peer-checked:text-white peer-checked:border-gray-500 transition">Tidak Hadir</div>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Ucapan -->
+                        <div>
+                            <label class="text-xs font-bold text-gold mb-2 block uppercase tracking-wider">Ucapan & Doa</label>
+                            <textarea name="message" rows="3" class="w-full bg-black/50 border border-gold/30 p-3 rounded-lg text-white text-sm focus:border-gold focus:outline-none transition resize-none" placeholder="Tuliskan doa dan ucapan..." required></textarea>
+                        </div>
+
+                        <button type="submit" class="w-full bg-gold text-dark font-bold py-3 rounded-lg hover:bg-yellow-600 transition text-sm uppercase tracking-wider shadow-lg">Kirim Sekarang</button>
+                    </form>
                 </section>
 
-                <!-- 4. Guestbook Section -->
+                <!-- 4. DAFTAR UCAPAN (GUESTBOOK) -->
                 <section id="guestbook">
-                    <h2 class="text-3xl font-serif text-dark text-center mb-6">Buku Ucapan</h2>
-
-                    @if(session('message_success'))
-                        <div class="bg-green-100 text-green-800 p-3 rounded mb-4 text-center text-sm">{{ session('message_success') }}</div>
-                    @endif
-
-                    <form action="{{ route('messages.store', $invitation->id) }}" method="POST" class="mb-8 bg-white p-5 rounded-xl shadow-sm border border-gray-100">
-                        @csrf
-                        <input type="text" name="name" class="w-full border border-gray-300 p-3 rounded-lg mb-3 focus:outline-none focus:border-gold text-sm" placeholder="Nama Anda" required>
-                        <textarea name="message" rows="3" class="w-full border border-gray-300 p-3 rounded-lg mb-3 focus:outline-none focus:border-gold text-sm" placeholder="Tuliskan doa dan ucapan..." required></textarea>
-                        <button type="submit" class="w-full bg-gold text-dark font-bold py-3 rounded-lg hover:bg-yellow-600 transition text-sm">Kirim Ucapan</button>
-                    </form>
+                    <h2 class="text-3xl font-serif text-dark text-center mb-6">Buku Tamu</h2>
 
                     <div class="space-y-3 max-h-80 overflow-y-auto pr-2">
                         @forelse($messages as $msg)
@@ -360,7 +375,6 @@
                 main.style.display = 'flex';
                 main.classList.add('fade-in');
                 
-                // Tampilkan tombol musik dan putar lagu
                 musicBtn.classList.remove('hidden');
                 music.play().then(() => {
                     pauseIcon.classList.remove('hidden');
