@@ -44,7 +44,7 @@
 @endphp
 
 <!-- WELCOME SCREEN -->
-<div id="welcome-screen" class="fixed inset-0 z-50 flex items-center justify-center transition-opacity duration-1000 overflow-hidden" style="background-image: url('{{ $bgImg }}'); background-size: cover; background-position: center;">
+<div id="welcome-screen" class="fixed inset-0 z-50 flex items-center justify-center transition-opacity duration-1000 overflow-y-auto py-10" style="background-image: url('{{ $bgImg }}'); background-size: cover; background-position: center;">
     <div class="absolute inset-0 bg-white/70 backdrop-blur-md"></div>
     
     <div class="sparkle top-10 left-8 text-4xl z-10">♡</div>
@@ -68,7 +68,9 @@
             <span class="text-xs tracking-[3px] font-bold text-darkpink">✦ YOU ARE INVITED ✦</span>
         </div>
         <p class="section-label mb-3">THE WEDDING OF</p>
-        <h1 class="font-display text-5xl md:text-7xl gradient-text mb-7 leading-tight">{{ $invitation->title }}</h1>
+        
+        <!-- JUDUL DIBUAT RESPONSIF -->
+        <h1 class="font-display text-3xl md:text-5xl lg:text-6xl gradient-text mb-7 leading-tight break-words w-full px-2">{{ $invitation->title }}</h1>
 
         <div class="flex justify-center items-center gap-5 mb-8">
             @if(isset($invitation->config['groom_photo']))
@@ -119,7 +121,9 @@
                 <span class="text-pink">✦</span>
             </div>
             <p class="font-display italic text-2xl text-darkpink mb-3">A love story begins...</p>
-            <h1 class="font-display text-5xl md:text-7xl gradient-text leading-tight mb-6">{{ $invitation->title }}</h1>
+            
+            <!-- JUDUL DI HERO JUGA DIBUAT RESPONSIF -->
+            <h1 class="font-display text-3xl md:text-5xl lg:text-6xl gradient-text leading-tight mb-6 break-words">{{ $invitation->title }}</h1>
 
             <div class="flex justify-center items-center gap-4 mb-6">
                 @if(isset($invitation->config['groom_photo']))
