@@ -9,6 +9,9 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
     
+    <!-- TAMBAHAN: FontAwesome untuk Ikon -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.1.0/css/all.min.css">
+    
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -50,15 +53,27 @@
 @endphp
 
     <!-- WELCOME SCREEN -->
-    <div id="welcome-screen" class="fixed inset-0 z-50 flex flex-col items-center justify-center transition-opacity duration-1000 overflow-hidden"
+    <div id="welcome-screen" class="fixed inset-0 z-50 flex flex-col items-center justify-center transition-opacity duration-1000 overflow-y-auto py-10"
          style="background-image: url('{{ $bgImg }}'); background-size: cover; background-position: center;">
          
         <div class="absolute inset-0 bg-navy/85 backdrop-blur-sm"></div>
 
         <div class="relative z-10 text-center px-6 max-w-md w-full fade-in">
             <p class="text-gold tracking-[0.3em] uppercase text-xs mb-4">The Celebration Of</p>
-            <h1 class="text-4xl md:text-5xl font-serif text-white mb-6 leading-tight">{{ $invitation->title }}</h1>
             
+            <!-- Judul Responsif -->
+            <h1 class="text-3xl md:text-4xl lg:text-5xl font-serif text-white mb-2 leading-tight break-words w-full px-4">{{ $invitation->title }}</h1>
+            
+            <!-- Nama Panggilan & Umur -->
+            @if($nickname || $age)
+            <p class="text-gold font-serif text-lg italic mb-6">
+                @if($age) {{ $age }}<sup>th</sup> @endif
+                @if($nickname) {{ $nickname }} @endif
+            </p>
+            @else
+            <div class="mb-6"></div>
+            @endif
+
             @if($mainPhoto)
                 <img src="{{ $mainPhoto }}" class="w-36 h-36 object-cover rounded-full mx-auto border-4 border-gold shadow-2xl mb-8">
             @endif
@@ -82,8 +97,9 @@
                  style="background-image: url('{{ $bgImg }}'); background-size: cover; background-position: center;">
             <div class="absolute inset-0 bg-navy/70"></div>
             
-            <div class="relative z-10">
-                <h1 class="text-3xl md:text-5xl font-serif text-white drop-shadow-lg mb-4">{{ $invitation->title }}</h1>
+            <div class="relative z-10 w-full">
+                <!-- Judul Responsif -->
+                <h1 class="text-3xl md:text-4xl lg:text-5xl font-serif text-white drop-shadow-lg mb-4 break-words px-4">{{ $invitation->title }}</h1>
                 <div class="w-16 h-1 bg-gold mx-auto mb-4"></div>
                 <p class="text-xl font-serif text-gold italic">
                     {{ \Carbon\Carbon::parse($invitation->event_date)->translatedFormat('d F Y') }}

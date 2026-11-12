@@ -277,6 +277,28 @@
             </section>
             @endif
 
+            <!-- RSVP SECTION (BARU DITAMBAHKAN) -->
+            <section class="card p-6 text-center">
+                <h3 class="ribbon text-xl mb-5 block w-fit mx-auto">Konfirmasi Kehadiran 🌸</h3>
+                
+                @if(session('rsvp_success'))
+                    <div class="bg-green-100 text-green-800 p-3 rounded-xl mb-4 text-center text-sm border-2 border-green-200">{{ session('rsvp_success') }}</div>
+                @endif
+
+                @if($guest)
+                    <p class="text-sm text-ink/70 mb-5">Halo <b>{{ $guest->name }}</b>, berkenan hadir?</p>
+                    <form action="{{ route('guests.rsvp', $invitation->id) }}" method="POST" class="flex flex-col sm:flex-row justify-center gap-3">
+                        @csrf
+                        <input type="hidden" name="guest_code" value="{{ $guest->unique_code }}">
+                        <button type="submit" name="status" value="hadir" class="btn-anime justify-center text-sm py-3 px-6">Hadir</button>
+                        <button type="submit" name="status" value="tidak_hadir" class="inline-flex items-center justify-center gap-2 px-6 py-3 font-black text-white bg-gray-300 border-[3px] border-white rounded-full shadow-[0_5px_0_#a0a0a0] hover:-translate-y-0.5 hover:shadow-[0_7px_0_#a0a0a0] active:translate-y-1 active:shadow-[0_1px_0_#a0a0a0] transition-all duration-150 cursor-pointer text-sm">Tidak Hadir</button>
+                    </form>
+                @else
+                    <p class="text-sm text-ink/60 italic">Silakan buka link undangan dari penyelenggara untuk konfirmasi.</p>
+                @endif
+            </section>
+
+            <!-- Buku Tamu -->
             <section class="card p-6">
                 <h3 class="ribbon text-xl mb-5 block w-fit mx-auto">Buku Tamu</h3>
 

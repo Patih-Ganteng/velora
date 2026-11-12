@@ -250,23 +250,25 @@
                 </section>
                 @endif
 
-                <!-- 3. RSVP Section -->
-                <section id="rsvp" class="bg-white p-6 md:p-8 rounded-2xl shadow-md border border-gold/20">
-                    <h2 class="text-2xl font-serif text-dark text-center mb-6">Konfirmasi Kehadiran</h2>
+                <!-- 3. RSVP Section (ELEGAN) -->
+                <section id="rsvp" class="bg-dark p-6 md:p-8 rounded-2xl shadow-[0_0_20px_rgba(212,175,55,0.2)] border border-gold/50 text-center">
+                    <h2 class="text-2xl font-serif text-gold mb-2">Konfirmasi Kehadiran</h2>
+                    <div class="w-10 h-[1px] bg-gold/50 mx-auto mb-6"></div>
                     
                     @if(session('rsvp_success'))
-                        <div class="bg-green-100 text-green-800 p-3 rounded mb-4 text-center text-sm">{{ session('rsvp_success') }}</div>
+                        <div class="bg-gold/20 text-gold border border-gold p-3 rounded-lg mb-4 text-sm">{{ session('rsvp_success') }}</div>
                     @endif
 
                     @if($guest)
+                        <p class="text-gray-300 text-sm mb-6">Halo <b>{{ $guest->name }}</b>, berkenan hadir?</p>
                         <form action="{{ route('guests.rsvp', $invitation->id) }}" method="POST" class="flex flex-col md:flex-row justify-center gap-3">
                             @csrf
                             <input type="hidden" name="guest_code" value="{{ $guest->unique_code }}">
-                            <button type="submit" name="status" value="hadir" class="px-8 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition w-full md:w-auto font-semibold text-sm">Hadir</button>
-                            <button type="submit" name="status" value="tidak_hadir" class="px-8 py-3 bg-red-600 text-white rounded-lg hover:bg-red-700 transition w-full md:w-auto font-semibold text-sm">Tidak Hadir</button>
+                            <button type="submit" name="status" value="hadir" class="px-8 py-3 bg-gold text-dark rounded-full hover:bg-yellow-600 transition w-full md:w-auto font-bold text-sm tracking-wider uppercase shadow-lg">Hadir</button>
+                            <button type="submit" name="status" value="tidak_hadir" class="px-8 py-3 bg-gray-800 text-gray-300 border border-gray-600 rounded-full hover:bg-gray-700 transition w-full md:w-auto font-bold text-sm tracking-wider uppercase shadow-lg">Tidak Hadir</button>
                         </form>
                     @else
-                        <p class="text-center text-gray-500 text-sm">Silakan buka link undangan yang dikirim oleh penyelenggara.</p>
+                        <p class="text-center text-gray-400 text-sm italic">Silakan buka link undangan khusus dari penyelenggara untuk konfirmasi.</p>
                     @endif
                 </section>
 

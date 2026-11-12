@@ -258,6 +258,30 @@
     </section>
     @endif
 
+    
+        <!-- RSVP SECTION (BARU DITAMBAHKAN) -->
+    <section class="max-w-lg mx-auto px-5 pt-10 pb-4 relative z-30">
+        <div class="glass soft-shadow rounded-3xl p-7 text-center border border-pink/30">
+            <p class="section-label">ATTENDANCE CONFIRMATION</p>
+            <h2 class="font-display text-3xl gradient-text mt-3 mb-6">Konfirmasi Kehadiran</h2>
+            
+            @if(session('rsvp_success'))
+                <div class="bg-green-100 text-green-800 p-3 rounded-xl mb-4 text-center text-sm">{{ session('rsvp_success') }}</div>
+            @endif
+
+            @if($guest)
+                <p class="text-sm text-gray-600 mb-5">Halo <b>{{ $guest->name }}</b>, silakan konfirmasi kehadiran Anda:</p>
+                <form action="{{ route('guests.rsvp', $invitation->id) }}" method="POST" class="flex justify-center gap-3">
+                    @csrf
+                    <input type="hidden" name="guest_code" value="{{ $guest->unique_code }}">
+                    <button type="submit" name="status" value="hadir" class="bg-[#EBA1C1] text-white px-6 py-2.5 rounded-full font-bold text-sm shadow-[0_4px_0_#d94f78] hover:translate-y-1 hover:shadow-[0_1px_0_#d94f78] transition-all">Hadir</button>
+                    <button type="submit" name="status" value="tidak_hadir" class="bg-gray-300 text-gray-700 px-6 py-2.5 rounded-full font-bold text-sm shadow-[0_4px_0_#a0a0a0] hover:translate-y-1 hover:shadow-[0_1px_0_#a0a0a0] transition-all">Tidak Hadir</button>
+                </form>
+            @else
+                <p class="text-sm text-gray-500">Silakan buka link undangan yang dikirim oleh penyelenggara untuk melakukan konfirmasi.</p>
+            @endif
+        </div>
+    </section>
     <section class="max-w-lg mx-auto px-5 py-16">
         <div class="text-center mb-8">
             <p class="section-label">SEND YOUR LOVE</p>

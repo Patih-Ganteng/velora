@@ -109,7 +109,7 @@
         <!-- Konten Utama -->
         <div class="max-w-lg mx-auto px-5 space-y-12 -mt-16 relative z-20">
             
-            <!-- COUNTDOWN TIMER (FITUR BARU) -->
+            <!-- COUNTDOWN TIMER -->
             <div class="bg-white rounded-3xl p-6 shadow-xl border-4 border-partyYellow text-center">
                 <h3 class="font-party text-2xl text-partyDark mb-4">Menuju Hari Spesial 🎂</h3>
                 <div class="flex justify-center gap-2 md:gap-3">
@@ -225,6 +225,27 @@
             </section>
             @endif
 
+            <!-- RSVP SECTION (BARU DITAMBAHKAN) -->
+            <section class="bg-white p-6 rounded-3xl shadow-xl border-4 border-partyPink text-center">
+                <h3 class="font-party text-2xl text-partyDark mb-4">Konfirmasi Kehadiran 🎈</h3>
+                
+                @if(session('rsvp_success'))
+                    <div class="bg-green-100 text-green-800 p-3 rounded-xl mb-4 text-sm font-bold border border-green-200">{{ session('rsvp_success') }}</div>
+                @endif
+
+                @if($guest)
+                    <p class="text-sm text-gray-600 mb-5">Halo <b>{{ $guest->name }}</b>, silakan konfirmasi kehadiran Anda:</p>
+                    <form action="{{ route('guests.rsvp', $invitation->id) }}" method="POST" class="flex flex-col sm:flex-row justify-center gap-3">
+                        @csrf
+                        <input type="hidden" name="guest_code" value="{{ $guest->unique_code }}">
+                        <button type="submit" name="status" value="hadir" class="px-8 py-3 bg-partyPink text-white font-party font-bold rounded-xl shadow-[0_4px_0_#d94f78] hover:translate-y-1 hover:shadow-[0_1px_0_#d94f78] transition-all w-full sm:w-auto text-sm">Hadir</button>
+                        <button type="submit" name="status" value="tidak_hadir" class="px-8 py-3 bg-gray-300 text-gray-700 font-party font-bold rounded-xl shadow-[0_4px_0_#a0a0a0] hover:translate-y-1 hover:shadow-[0_1px_0_#a0a0a0] transition-all w-full sm:w-auto text-sm">Tidak Hadir</button>
+                    </form>
+                @else
+                    <p class="text-sm text-gray-500 italic">Silakan buka link undangan dari penyelenggara untuk konfirmasi.</p>
+                @endif
+            </section>
+
             <!-- RSVP & UCAPAN -->
             <section class="bg-white p-6 rounded-3xl shadow-xl border-4 border-partyPurple">
                 <h3 class="font-party text-2xl text-partyDark text-center mb-6">Buku Tamu & Ucapan 🎁</h3>
@@ -336,7 +357,7 @@
             }
         });
 
-        // Countdown Timer Logic (FITUR BARU)
+        // Countdown Timer Logic
         const targetDate = new Date("{{ \Carbon\Carbon::parse($invitation->event_date)->toIso8601String() }}").getTime();
         setInterval(function() {
             const now = new Date().getTime();
