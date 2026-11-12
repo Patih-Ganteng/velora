@@ -61,5 +61,8 @@ Route::middleware('auth')->group(function () {
         return redirect('/');
     })->name('logout');
             
-            Route::get('/undangan/{invitation}/daftar-tamu', [InvitationController::class, 'guests'])->name('invitations.guests');
-        });
+            
+Route::get('/undangan/{invitation}/daftar-tamu', [InvitationController::class, 'guests'])->name('invitations.guests');
+      // Rute Hapus Tamu (Ini yang tadi hilang)
+    Route::delete('/undangan/{invitation}/tamu/{guestId}', [InvitationController::class, 'destroyGuest'])->name('guests.destroy');
+});
