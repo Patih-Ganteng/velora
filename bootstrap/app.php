@@ -12,8 +12,11 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        // TAMBAHKAN BARIS INI 👇
+        // Buat percaya proxy Railway (biar HTTPS jalan)
         $middleware->trustProxies(at: '*');
+        
+        // TAMBAHKAN BARIS INI 👇 (Biar user yang belum login dilempar ke halaman depan)
+        $middleware->redirectGuestsTo('/');
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         $exceptions->shouldRenderJsonWhen(
